@@ -8,8 +8,6 @@ int main()
 {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     sf::RenderWindow window(sf::VideoMode(1024, 768, desktop.bitsPerPixel), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
     sf::Texture bird;
     if (!bird.loadFromFile("bird.png")) {
         return -1;
@@ -47,8 +45,10 @@ int main()
         if (sprite.getPosition().y > windowBounds.top + windowBounds.height) {
             sprite.setPosition(400, 300);
             gameOver = true;
+        } else if (sprite.getPosition().y < windowBounds.top) {
+            sprite.setPosition(400, windowBounds.top);
         }
-        window.clear();
+        window.clear(sf::Color::White);
         window.draw(sprite);
         window.display();
         if (gameOver) {
