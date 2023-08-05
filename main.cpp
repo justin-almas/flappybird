@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include<unistd.h> 
 
 int main()
 {
@@ -21,7 +22,9 @@ int main()
     const float gravity = 0.000003f;
     const float changeY = -0.03f;
     bool isJumping = false;
-    while (window.isOpen())
+    bool gameOver = false;
+    sf::FloatRect windowBounds(sf::Vector2f(0.f, 0.f), window.getDefaultView().getSize());
+    while (window.isOpen()) //game loop
     {
         sf::Event event;
         while (window.pollEvent(event))
@@ -41,9 +44,17 @@ int main()
         }
         sprite.move(velocity);
         velocity.y += gravity;
+        if (sprite.getPosition().y > windowBounds.top + windowBounds.height) {
+            sprite.setPosition(400, 300);
+            gameOver = true;
+        }
         window.clear();
         window.draw(sprite);
         window.display();
+        if (gameOver) {
+            sleep(2);
+            gameOver = false;
+        }
     }
 
     return 0;
