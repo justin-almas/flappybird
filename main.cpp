@@ -45,8 +45,8 @@ int main()
         if (sprite.getPosition().y > windowBounds.top + windowBounds.height) {
             sprite.setPosition(400, 300);
             gameOver = true;
-        } else if (sprite.getPosition().y < windowBounds.top) {
-            sprite.setPosition(400, windowBounds.top);
+        } else if (sprite.getPosition().y < windowBounds.top - 40) {
+            sprite.setPosition(400, windowBounds.top - 40);
         }
         window.clear(sf::Color::White);
         window.draw(sprite);
