@@ -54,6 +54,7 @@ int main()
         if (gameOver) {
             sleep(2);
             gameOver = false;
+            velocity.y = 0;
         }
     }
 
