@@ -1,3 +1,4 @@
 main.o
 app
 pipe.o
+settings.json
