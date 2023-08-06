@@ -47,7 +47,6 @@ int main()
     const float gravity = 0.000003f;
     const float changeY = -0.02f;
     bool isJumping = false;
-    bool gameOver = false;
     sf::FloatRect windowBounds(sf::Vector2f(0.f, 0.f), window.getDefaultView().getSize());
 
     const float pipeWidth = 80.0f;
