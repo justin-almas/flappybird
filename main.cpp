@@ -26,6 +26,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1024, 768, desktop.bitsPerPixel), "SFML works!");
 
     sf::Clock clock;
+    sf::Clock scoreClock;
 
     sf::Texture bird;
     if (!bird.loadFromFile("bird.png")) {
@@ -37,11 +38,13 @@ int main()
     sprite.setPosition(400, 300);
     sprite.setHitbox({ 15.f, 8.f, 38.f, 33.f });
 
-    // sf::RectangleShape test(sf::Vector2f(38.f,33.f));
-    // test.setPosition(415, 308);
-    // test.setFillColor(sf::Color::Green);
-    //here to test hitbox
-
+    sf::Font font;
+    if (!font.loadFromFile("font.pfb"));
+    int score = 0;
+    sf::Text text("0", font);
+    text.setCharacterSize(30);
+    text.setStyle(sf::Text::Bold);
+    text.setFillColor(sf::Color::Red);
 
     sf::Vector2f velocity (0.0f, 0.0f);
     const float gravity = 0.000003f;
@@ -87,6 +90,12 @@ int main()
             pipes.push_back(pipe);
         }
 
+        if (scoreClock.getElapsedTime().asSeconds() > 4) {
+            scoreClock.restart();
+            score += 1;
+            text.setString(std::to_string(score)); 
+        }
+
         if (sprite.getPosition().y > windowBounds.top + windowBounds.height) {
             sprite.setPosition(400, 300);
             window.close();
@@ -116,12 +125,13 @@ int main()
         window.clear(sf::Color::White);
 
         window.draw(sprite);
-        //window.draw(test); hitbox test
 
         for (const auto& pipe : pipes)
         {
             pipe.draw(window);
         }
+
+        window.draw(text);
 
         window.display();
     }
