@@ -90,16 +90,16 @@ int main()
 
         if (sprite.getPosition().y > windowBounds.top + windowBounds.height) {
             sprite.setPosition(400, 300);
-            gameOver = true;
-        } else if (sprite.getPosition().y < windowBounds.top - 40) {
-            sprite.setPosition(400, windowBounds.top - 40);
+            window.close();
+        } else if (sprite.getPosition().y < windowBounds.top) {
+            sprite.setPosition(400, windowBounds.top);
         }
 
         for (auto i = pipes.begin(); i != pipes.end();)
         {
             i->move();
             if (sprite.getGlobalHitBox().intersects(i->getTopBounds()) || sprite.getGlobalHitBox().intersects(i->getBottomBounds())) {
-                gameOver = true;
+                window.close();
             }
             if (i->getTopBounds().left + pipeWidth < 0)
             {
@@ -125,12 +125,6 @@ int main()
         }
 
         window.display();
-        if (gameOver) {
-            sleep(2);
-            gameOver = false;
-            velocity.y = 0;
-            sprite.setPosition(400, 300);
-        }
     }
 
     return 0;
