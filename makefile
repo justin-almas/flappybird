@@ -4,10 +4,13 @@ LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
 all: app
 
-app: main.o
-	$(CC) main.o -o app $(LDFLAGS)
+app: main.o pipe.o
+	$(CC) main.o pipe.o -o app $(LDFLAGS)
 
-main.o: main.cpp
+pipe.o: pipe.cpp pipe.hpp
+	$(CC) $(CFLAGS) pipe.cpp
+
+main.o: main.cpp pipe.hpp
 	$(CC) $(CFLAGS) main.cpp
 
 clean:
