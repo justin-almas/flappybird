@@ -6,6 +6,20 @@
 #include "pipe.hpp"
 #include <random>
 
+class HitboxSprite : public sf::Sprite {
+    public:
+        void setHitbox(const sf::FloatRect& hitbox) {
+            myHitbox = hitbox;
+        }
+
+        sf::FloatRect getGlobalHitBox() const {
+            return getTransform().transformRect(myHitbox);
+        }
+    private:
+        sf::FloatRect myHitbox;
+};
+
+
 int main()
 {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -17,10 +31,17 @@ int main()
     if (!bird.loadFromFile("bird.png")) {
         return -1;
     }
-    sf::Sprite sprite;
+    HitboxSprite sprite;
     sprite.setTexture(bird);
     sprite.setScale(0.1,0.1);
     sprite.setPosition(400, 300);
+    sprite.setHitbox({ 15.f, 8.f, 38.f, 33.f });
+
+    // sf::RectangleShape test(sf::Vector2f(38.f,33.f));
+    // test.setPosition(415, 308);
+    // test.setFillColor(sf::Color::Green);
+    //here to test hitbox
+
 
     sf::Vector2f velocity (0.0f, 0.0f);
     const float gravity = 0.000003f;
@@ -41,7 +62,6 @@ int main()
     std::mt19937 rng(dev());
     std::vector<float> possibleGapLocations = {100.f, 200.f, 300.f, 400.f, 500.f, 600.f};
     std::uniform_int_distribution<std::mt19937::result_type> distrib(0,5); // distribution in range [1, 6]
-
     while (window.isOpen()) //game loop
     {
         sf::Event event;
@@ -68,10 +88,20 @@ int main()
             pipes.push_back(pipe);
         }
 
+        if (sprite.getPosition().y > windowBounds.top + windowBounds.height) {
+            sprite.setPosition(400, 300);
+            gameOver = true;
+        } else if (sprite.getPosition().y < windowBounds.top - 40) {
+            sprite.setPosition(400, windowBounds.top - 40);
+        }
+
         for (auto i = pipes.begin(); i != pipes.end();)
         {
             i->move();
-            if (i->getBounds().left + pipeWidth < 0)
+            if (sprite.getGlobalHitBox().intersects(i->getTopBounds()) || sprite.getGlobalHitBox().intersects(i->getBottomBounds())) {
+                gameOver = true;
+            }
+            if (i->getTopBounds().left + pipeWidth < 0)
             {
                 i = pipes.erase(i);
             }
@@ -80,19 +110,14 @@ int main()
                 ++i;
             }
         }
-
+        
         sprite.move(velocity);
         velocity.y += gravity;
-        if (sprite.getPosition().y > windowBounds.top + windowBounds.height) {
-            sprite.setPosition(400, 300);
-            gameOver = true;
-        } else if (sprite.getPosition().y < windowBounds.top - 40) {
-            sprite.setPosition(400, windowBounds.top - 40);
-        }
 
         window.clear(sf::Color::White);
 
         window.draw(sprite);
+        //window.draw(test); hitbox test
 
         for (const auto& pipe : pipes)
         {
@@ -104,6 +129,7 @@ int main()
             sleep(2);
             gameOver = false;
             velocity.y = 0;
+            sprite.setPosition(400, 300);
         }
     }
 

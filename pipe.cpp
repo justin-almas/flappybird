@@ -16,8 +16,12 @@ void Pipe::move() {
     lowerPipe.move(-speed, 0);
 }
 
-sf::FloatRect Pipe::getBounds() const {
+sf::FloatRect Pipe::getTopBounds() const {
     return upperPipe.getGlobalBounds();
+}
+
+sf::FloatRect Pipe::getBottomBounds() const {
+    return lowerPipe.getGlobalBounds();
 }
 
 void Pipe::draw(sf::RenderWindow& window) const{

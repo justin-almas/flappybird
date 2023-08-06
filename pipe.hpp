@@ -7,7 +7,9 @@ class Pipe {
 
         void move();
 
-        sf::FloatRect getBounds() const;
+        sf::FloatRect getTopBounds() const;
+
+        sf::FloatRect getBottomBounds() const;
 
         void draw(sf::RenderWindow& window) const;
 
